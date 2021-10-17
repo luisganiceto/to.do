@@ -25,11 +25,24 @@ export function Home() {
   }
 
   function handleToggleTaskDone(id: number) {
-    //TODO - toggle task done if exists
+    const updatedTasks = tasks.map(task => ({ ...task }));
+        
+    updatedTasks.filter(
+      x => {
+        if (x.id === id) {
+          x.done ? x.done = false : x.done = true;
+          return x;
+        }
+      }
+    );
+    
+    setTasks(updatedTasks);
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    setTasks(oldState => oldState.filter(
+      task => task.id !== id
+    ));
   }
 
   return (
