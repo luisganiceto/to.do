@@ -29,7 +29,7 @@ export function Home() {
     } else {
       setTasks(oldState => [...oldState, data] );
     }
-
+    console.log(tasks);
   }
 
   function handleToggleTaskDone(id: number) {
@@ -45,6 +45,8 @@ export function Home() {
     );
     
     setTasks(updatedTasks);
+
+    console.log(tasks);
   }
 
   function handleRemoveTask(id: number) {
@@ -62,20 +64,23 @@ export function Home() {
         }
       ]
     )
+    console.log(tasks);
   }
 
   function handleEditTaks(taskId : number, taskNewTitle: string){
     const updatedTasks = tasks.map(task => ({ ...task }));
-        
-    updatedTasks.find(
+      
+    updatedTasks.filter(
       x => {
         if (x.id === taskId) {
           x.title = taskNewTitle;
+          return x;
         }
       }
     );
     
     setTasks(updatedTasks);
+    console.log(tasks);
   }
 
   return (

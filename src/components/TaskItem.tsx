@@ -13,13 +13,12 @@ export interface Task {
 
 interface TasksItemProps {
     item: Task;
-    index: number;
     toggleTaskDone: (id: number) => void;
     removeTask: (id: number) => void;
     editTask: (id: number, title: string) => void;
 }
 
-export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: TasksItemProps) {
+export function TaskItem({item,  toggleTaskDone, removeTask, editTask }: TasksItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [titleEditing, setTitleEditing] = useState(item.title);
     const textInputRef = useRef<TextInput>(null);
@@ -29,11 +28,12 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
     }
 
     function handleCancelEditing() {
+        setTitleEditing(item.title);
         setIsEditing(false);
     }
 
-    function handleSubmitEditing(id : number, title : string){
-        editTask(id, title);
+    function handleSubmitEditing(){
+        editTask(item.id, titleEditing);
         setIsEditing(false);
     }
 
@@ -51,13 +51,11 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
         <>
             <View>
                 <TouchableOpacity
-                    testID={`button-${index}`}
                     activeOpacity={0.7}
                     style={styles.taskButton}
                     onPress={() => toggleTaskDone(item.id)}
                 >
                     <View 
-                        testID={`marker-${index}`}
                         style={item.done === true ? styles.taskMarkerDone : styles.taskMarker} 
                     >
                         { item.done && (
@@ -73,7 +71,7 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
                         value={titleEditing}
                         onChangeText={setTitleEditing}
                         editable={isEditing}
-                        onSubmitEditing={() => handleSubmitEditing(item.id, item.title)}
+                        onSubmitEditing={handleSubmitEditing}
                         ref={textInputRef}
                         style={item.done ? styles.taskTextDone : styles.taskText}
                     />                
@@ -85,13 +83,13 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
                     <TouchableOpacity
                         onPress={handleCancelEditing}
                     >
-                    <Icon name="x" size={24} color="#b2b2b2" />
+                        <Icon name="x" size={24} color="#b2b2b2" />
                     </TouchableOpacity>
                 ) : (
                     <TouchableOpacity
-                    onPress={handleStartEditing}
+                        onPress={handleStartEditing}
                     >
-                    <Image source={editIcon} />
+                        <Image source={editIcon} />
                     </TouchableOpacity>
                 ) }
 
@@ -100,9 +98,9 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
                 />
 
                 <TouchableOpacity
-                    testID={`trash-${index}`}
-                    style={{ paddingHorizontal: 24 }}
                     onPress={() => removeTask(item.id)}
+                    disabled={isEditing}
+                    style={{opacity: isEditing ? 0.2 : 1}}
                 >
                     <Image source={trashIcon} />
                 </TouchableOpacity>
@@ -114,8 +112,7 @@ export function TaskItem({item, index, toggleTaskDone, removeTask, editTask }: T
 const styles = StyleSheet.create({
     taskButton: {
         flex: 1,
-        paddingHorizontal: 24,
-        paddingVertical: 15,
+        paddingHorizontal: 24,        
         marginBottom: 4,
         borderRadius: 4,
         flexDirection: 'row',
@@ -150,15 +147,16 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter-Medium'
     },
     iconsContainer: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center' 
+        paddingLeft: 12,
+        paddingRight: 24
         
     },
     iconsDivider: {
         width: 1,
         height: 24,
-        backgroundColor: '#C4C4C4'
+        backgroundColor: '#C4C4C4',
+        marginHorizontal: 12
     }
 })

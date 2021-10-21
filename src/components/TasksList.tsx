@@ -30,7 +30,6 @@ export function TasksList({ tasks, toggleTaskDone, removeTask, editTask }: Tasks
           <ItemWrapper index={index}>
             <TaskItem 
               item={item}
-              index={index}
               toggleTaskDone={toggleTaskDone}
               removeTask={removeTask}
               editTask={editTask}
